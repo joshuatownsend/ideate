@@ -1,0 +1,13 @@
+{
+  "name": "ideate-marketplace",
+  "owner": {
+    "name": "Josh Townsend"
+  },
+  "plugins": [
+    {
+      "name": "ideate",
+      "source": "./",
+      "description": "Dual-lens feature ideation: mine the codebase for grounded direction signals and gather real user evidence to brainstorm, score, and spec new capabilities for any actively developed project."
+    }
+  ]
+}

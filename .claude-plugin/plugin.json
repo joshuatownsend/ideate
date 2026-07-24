@@ -1,0 +1,8 @@
+{
+  "name": "ideate",
+  "description": "Dual-lens feature ideation: mine the codebase for grounded direction signals and gather real user evidence to brainstorm, score, and spec new capabilities for any actively developed project.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Josh Townsend"
+  }
+}
