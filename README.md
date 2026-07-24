@@ -40,4 +40,4 @@ Copy `skills/ideate/` into `~/.claude/skills/`, or install the repo as a Claude 
 
 ## Status
 
-v0.1.0 — under active development.
+v0.2.0 — first full end-to-end test run complete; six dogfood-driven amendments applied. Under active development.
