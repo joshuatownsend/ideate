@@ -115,6 +115,20 @@ For each selected idea, write `<output-dir>/NNN-<slug>.md` using the matching te
 
 Update `<output-dir>/README.md` (index): portfolio table with per-idea status (`SELECTED` / `DEFERRED` / `REJECTED` / `DONE`), the killed-candidates ledger, deferred ideas carried forward, and the run metadata (date, mode, SHA, evidence sources used). This index is what makes the next run a reconcile instead of a cold start.
 
+Every written brief and plan ends with a **Kickoff prompt** section (see `references/brief-template.md`) — a self-contained, copy-pasteable prompt for starting that work in any session or agent.
+
+## Phase 8 — Handoff
+
+A run must not end open-ended. In the **same turn** as Phase 7's writes:
+
+1. List what was written — each file path with a one-line description.
+2. Recommend a starting point (typically the highest-leverage quick win) with one sentence of reasoning.
+3. End the turn with an AskUserQuestion — "What's next?" — offering:
+   - **Start the recommended idea now** — begin executing its brief/plan in this session. The ideation pipeline is complete at this point; this skill's read-only rules end with it. Restate the file's scope before touching anything, and for a handoff plan, offer dispatching a subagent executor in an isolated worktree instead where the environment supports it.
+   - **Give me the kickoff prompt** — print the chosen file's Kickoff prompt section verbatim in a fenced block for copy-paste into a fresh session or another agent.
+   - **Stop here** — confirm what's persisted (briefs/plans, index, run report) and that a future `/ideate` run will reconcile against them.
+   The "Other" field covers everything else (start a different idea, revise a brief, etc.).
+
 ## Reconcile runs
 
 For each prior idea: verify its evidence still exists at the cited locations (drift check against the stamped SHA), re-score against current personas/evidence, and tag `prior-keep` (unchanged), `prior-reframe` (right idea, wrong shape — explain), `prior-drop` (evidence gone or built independently — record which). Then continue the normal pipeline for new candidates.

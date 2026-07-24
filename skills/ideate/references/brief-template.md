@@ -45,6 +45,15 @@ finish in a day.
 
 ## Decision criteria
 What answer pattern means "build it", "reshape it", or "drop it".
+
+## Kickoff prompt
+> Copy-paste to start this spike in any session or agent.
+```text
+Read <absolute path to this file> in full before doing anything. It is a
+design-spike brief: run the spike steps, answer the open questions, and
+report against its decision criteria. Scope: <one line>. Do not build
+beyond the spike; prototype work happens behind a flag or on a branch.
+```
 ```
 
 ## Full handoff plan (`--plans`)
@@ -103,6 +112,16 @@ fails twice, scope pressure).
 ## Maintenance notes
 What future changes this capability makes easier/harder; follow-ups
 deliberately left out.
+
+## Kickoff prompt
+> Copy-paste to start this work in any session or agent.
+```text
+Read <absolute path to this file> in full before doing anything. It is a
+self-contained implementation plan: follow the executor instructions at
+the top, run the drift check first, execute the steps in order verifying
+each, and stop at any STOP condition. Scope: <one line>. Work on a
+branch; when done, report against the Done criteria checklist.
+```
 ```
 
 Excerpt integrity: code excerpts in either format come from your own reads during this session — never from a subagent's report. Re-open every cited file before writing; a wrong excerpt becomes a wrong plan that fails its own drift check.
