@@ -155,4 +155,4 @@ An idea with grounded evidence from **both** lenses — the architecture makes i
 - **Build** column: `natural-fit` (existing architecture supports it directly) or `new-ground` (requires new subsystem/dependency) — the honest-scope commitment shown before the user selects.
 - Show **every** Validate/Advance candidate. Never hide any behind "plus N more."
 - Follow the table with the **killed** and **parked** ledgers (idea — reason — closest surviving sibling).
-- Present the portfolio and the selection question in separate turns.
+- The showcase and the selection interaction share one continuous turn: portfolio text first, then the blocking AskUserQuestion call — never end the turn between them (SKILL.md Phase 6).
