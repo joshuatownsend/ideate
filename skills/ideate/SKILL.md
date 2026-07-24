@@ -67,7 +67,7 @@ Build the grounding-facts block that every subagent will receive. Cover:
 
 **Inside-out**: spawn read-only Explore subagent(s) against `references/signal-playbook.md`. Quick mode: one subagent covering all five signals. Deep mode: up to five, one per signal. Each returns findings in the playbook's evidence format.
 
-**Outside-in**: follow `references/user-evidence.md` for the three evidence sources — live research (deep mode), session-transcript mining, and the maintainer interview. Run applicable sources; record for each piece of evidence its source type (needed for Research Backing scoring later).
+**Outside-in**: follow `references/user-evidence.md` for the three evidence sources — live research (deep mode), session-transcript mining, and the maintainer interview. Run applicable sources; record for each piece of evidence its source type (needed for Research Backing scoring later). The interview goes through the **AskUserQuestion tool** (mechanics in user-evidence.md) — never streamed as prose, where it gets lost among subagent updates; launch the subagents first so the blocking interview overlaps their runtime.
 
 Vet before proceeding: subagents over-report. Re-read the strongest cited locations yourself; drop findings whose evidence doesn't hold. Subagent line numbers are leads, not facts.
 
@@ -94,7 +94,7 @@ Read `references/cut-and-score.md` and apply it exactly: kill questions first (f
 
 Present the portfolio using the table format in `references/cut-and-score.md`, followed by the killed-candidates list. These are **options for the maintainer to weigh, not problems ranked** — present trade-offs honestly and make no push toward any particular pick.
 
-Present the showcase and the selection question in **separate turns**: first the full portfolio with the killed and parked ledgers (never hide candidates behind "plus N more"), then ask which ideas the user selects. Output format follows the verdict: **Validate** ideas get a design/spike brief (validation is the spike); **Advance** ideas get a choice of spike brief or full handoff plan. The user may override either way.
+Present the showcase and the selection question in **separate turns**: first the full portfolio with the killed and parked ledgers (never hide candidates behind "plus N more"), then ask which ideas the user selects — via the **AskUserQuestion tool** (multiSelect, one option per portfolio idea labeled by number and short title, so the choice can't scroll past as prose). The tool allows at most 4 options per question and 4 questions per call: batch the portfolio four ideas per question ("Select from ideas 1–4", "5–8", …), and for portfolios beyond 16, issue a second call. Output format follows the verdict: **Validate** ideas get a design/spike brief (validation is the spike); **Advance** ideas get a choice of spike brief or full handoff plan. The user may override either way. If AskUserQuestion is unavailable, ask in a dedicated turn containing nothing else.
 
 ## Phase 7 — Write and persist
 

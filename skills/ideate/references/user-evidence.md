@@ -28,7 +28,14 @@ Offered once per run (skippable; forced by `--interview`). The maintainer is a p
 2. What frustrates YOU about it that no issue tracker would show?
 3. What's YOUR killer feature — the thing only you would think of?
 
-Each substantive answer becomes evidence with source-type `interview` and feeds candidate generation directly. Present the questions in their own turn — don't bundle them into another decision.
+**Ask via the AskUserQuestion tool — never as streaming text.** Interview questions printed inline in a busy turn (evidence subagents streaming updates around them) scroll past unread and unanswered. The tool blocks until the user responds and renders each question as an explicit interaction. Mechanics:
+
+- One AskUserQuestion call carrying all three questions (adapt the wording to the project; keep the intent).
+- Each question's options: **"Skip this question"** and **"Skip the interview"** (selecting the latter on any question ends the interview — don't re-ask the rest). Real answers arrive through the tool's built-in "Other" free-text field; say so in each question's text: *"Choose Skip, or type your answer under Other."*
+- Best timing: issue the call immediately after launching the Phase 2 evidence subagents — the blocking wait then overlaps their runtime instead of adding to it.
+- If AskUserQuestion is unavailable in the environment, ask the three questions in a dedicated turn containing nothing else, and wait for the reply before proceeding.
+
+Each substantive answer becomes evidence with source-type `interview` and feeds candidate generation directly.
 
 ## Persona synthesis
 
