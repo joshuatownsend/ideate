@@ -30,9 +30,9 @@ Offered once per run (skippable; forced by `--interview`). The maintainer is a p
 
 **Ask via the AskUserQuestion tool — never as streaming text.** Interview questions printed inline in a busy turn (evidence subagents streaming updates around them) scroll past unread and unanswered. The tool blocks until the user responds and renders each question as an explicit interaction. Mechanics:
 
-- One AskUserQuestion call carrying all three questions (adapt the wording to the project; keep the intent).
-- Each question's options: **"Skip this question"** and **"Skip the interview"** (selecting the latter on any question ends the interview — don't re-ask the rest). Real answers arrive through the tool's built-in "Other" free-text field; say so in each question's text: *"Choose Skip, or type your answer under Other."*
-- Best timing: issue the call immediately after launching the Phase 2 evidence subagents — the blocking wait then overlaps their runtime instead of adding to it.
+- **Opting out of the whole interview happens at the offer gate, not inside it.** The offer ("Do you want the 3-question maintainer interview?") is its own decision, made before any interview question is asked. Do not put a "skip the interview" option on the questions themselves — all questions in an AskUserQuestion call are always presented to the user; there is no early exit mid-call, so such an option would promise a termination it cannot deliver.
+- Once the user opts in: one AskUserQuestion call carrying all three questions (adapt the wording to the project; keep the intent). Each question's options: **"Skip this question"** and **"Nothing comes to mind"**. Real answers arrive through the tool's built-in "Other" free-text field; say so in each question's text: *"Choose an option, or type your answer under Other."* A user who changes their mind mid-interview just picks Skip on the remaining questions.
+- Best timing: offer the interview, then issue the question call immediately after launching the Phase 2 evidence subagents — the blocking wait then overlaps their runtime instead of adding to it.
 - If AskUserQuestion is unavailable in the environment, ask the three questions in a dedicated turn containing nothing else, and wait for the reply before proceeding.
 
 Each substantive answer becomes evidence with source-type `interview` and feeds candidate generation directly.
