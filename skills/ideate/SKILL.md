@@ -15,7 +15,7 @@ Every idea must be grounded through at least one of two lenses, and the best ide
 
 ## Hard rules
 
-1. **Never modify source code.** The only writes allowed are to the `ideas/` directory (use `feature-ideas/` if `ideas/` already exists for another purpose) inside the target repo.
+1. **Never modify source code.** The only writes allowed are to the `ideas/` directory (use `feature-ideas/` if `ideas/` already exists for another purpose) inside the target repo, plus the session scratch location for the run report (Phase 6a).
 2. **Read-only analysis otherwise.** No installs, builds, formatters, commits, or pushes. Commands that inspect (`git log`, `grep`, `gh issue list`) are fine; commands that mutate the working tree are not.
 3. **Never fabricate user evidence.** Personas, pain points, and demand claims must trace to real evidence (repo content, live research, transcripts, or the maintainer's own answers). When evidence is thin, degrade with disclosure per the ladder in `references/user-evidence.md` — a disclosed inside-out-only run is valid; an invented persona is not.
 4. **Generic suggestions are noise, not findings.** An idea that could apply to any project in the category ("add dark mode", "add AI", "add a dashboard") does not belong in the portfolio unless this repo's evidence specifically demands it.
@@ -92,13 +92,17 @@ Read `references/cut-and-score.md` and apply it exactly: kill questions first (f
 
 ## Phase 6 — Portfolio
 
-Present the portfolio using the table format in `references/cut-and-score.md`, followed by the killed-candidates list. These are **options for the maintainer to weigh, not problems ranked** — present trade-offs honestly and make no push toward any particular pick.
+The portfolio holds **options for the maintainer to weigh, not problems ranked** — present trade-offs honestly and make no push toward any particular pick. Run this phase as three paced steps, **one decision per interaction**. The user has not read this skill: at each step, explain in plain language what is being asked and what happens to unchosen items before asking anything. If AskUserQuestion is unavailable, replace each interaction with a dedicated turn containing nothing else.
 
-Present the showcase and the selection question in **separate turns**: first the full portfolio with the killed and parked ledgers (never hide candidates behind "plus N more"), then ask which ideas the user selects — via the **AskUserQuestion tool** (multiSelect, one option per portfolio idea labeled by number and short title, so the choice can't scroll past as prose). The tool allows at most 4 options per question and 4 questions per call: batch the portfolio four ideas per question ("Select from ideas 1–4", "5–8", …), and for portfolios beyond 16, issue a second call. Output format follows the verdict: **Validate** ideas get a design/spike brief (validation is the spike); **Advance** ideas get a choice of spike brief or full handoff plan. The user may override either way. If AskUserQuestion is unavailable, ask in a dedicated turn containing nothing else.
+**6a — Save, then show.** Before presenting anything, write the full run report to the session scratch directory (`ideate-report-<date>.md`; OS temp dir if no scratchpad is available): personas, evidence summary with source types, the complete portfolio table, kill-question answers for survivors, killed and parked ledgers, disclosures, and the run SHA. Then present the portfolio in-chat — table format from `references/cut-and-score.md`, followed by the ledgers and disclosures — and give the report path: *"Full report saved to `<path>` for review at your own pace."* Never hide candidates behind "plus N more". **No question in this turn.**
+
+**6b — Select ideas (one AskUserQuestion call).** Explain before asking, in plain terms: selected ideas get written up as documents in `<output-dir>/`; unselected ideas are recorded in the index as deferred and resurface on the next run — nothing is lost by not selecting. Then ask via AskUserQuestion, multiSelect, one option per idea labeled by number + short title, with verdict, score, and one-line evidence in the option description. The tool allows at most 4 options per question and 4 questions per call: batch four ideas per question ("Select from ideas 1–4", "5–8", …); beyond 16, issue a second call. Include one final question in the same call: whether to also save the full run report into `<output-dir>/` in the repo ("Save to repo (Recommended)" / "Scratch only").
+
+**6c — Choose formats (only if Advance ideas were selected).** Validate-verdict ideas always get a design/spike brief — the validation is the deliverable, so don't ask. For each selected **Advance** idea, ask (one question per idea, up to 4 per call) which write-up to produce, explaining the difference in the question text: **spike brief** = a one-day investigation plan that answers the open questions before committing to build; **full handoff plan** = an executor-ready, step-by-step implementation spec another agent can build from without context. Note the user can override any of this via the "Other" field.
 
 ## Phase 7 — Write and persist
 
-For each selected idea, write `<output-dir>/NNN-<slug>.md` using the matching template in `references/brief-template.md`, stamped with the Phase 0 SHA.
+For each selected idea, write `<output-dir>/NNN-<slug>.md` using the matching template in `references/brief-template.md`, stamped with the Phase 0 SHA. If the user chose to keep the run report (6b), copy it to `<output-dir>/reports/<date>-portfolio.md`.
 
 Update `<output-dir>/README.md` (index): portfolio table with per-idea status (`SELECTED` / `DEFERRED` / `REJECTED` / `DONE`), the killed-candidates ledger, deferred ideas carried forward, and the run metadata (date, mode, SHA, evidence sources used). This index is what makes the next run a reconcile instead of a cold start.
 
