@@ -61,13 +61,20 @@ Build the grounding-facts block that every subagent will receive. Cover:
 - Git churn: hottest files over the last 90 days, abandoned branches, long-lived feature flags.
 - Issue-tracker shape if present: open counts, labels, most-reacted feature requests.
 
-**Subagent context checklist** — subagents do not inherit this session. Every subagent prompt in Phase 2 must include: (a) the absolute path of the reference file it works from plus the exact headings to follow, (b) the recon facts above, (c) decided-tradeoffs from ADRs/intent docs so it doesn't propose settled or rejected items, (d) verbatim copies of Hard Rules 6 and 7, and (e) the instruction "findings only — no fixes, no file dumps, cite `file:line` evidence for every claim."
+**Subagent context checklist** — subagents do not inherit this session. Every subagent prompt in Phase 2 must include: (a) the absolute path of the reference file it works from plus the exact headings to follow, (b) the recon facts above, (c) decided-tradeoffs from ADRs/intent docs so it doesn't propose settled or rejected items, (d) verbatim copies of Hard Rules 6 and 7, (e) the instruction "findings only — no fixes, no file dumps, cite `file:line` evidence for every claim," and (f) the instruction "your FINAL message must contain the complete findings — a summary, status update, or completion notice without the findings themselves is a failed run."
 
 ## Phase 2 — Dual lenses (run both in parallel)
 
 **Inside-out**: spawn read-only Explore subagent(s) against `references/signal-playbook.md`. Quick mode: one subagent covering all five signals. Deep mode: up to five, one per signal. Each returns findings in the playbook's evidence format.
 
 **Outside-in**: follow `references/user-evidence.md` for the three evidence sources — live research (deep mode), session-transcript mining, and the maintainer interview. Run applicable sources; record for each piece of evidence its source type (needed for Research Backing scoring later). The interview goes through the **AskUserQuestion tool** (mechanics in user-evidence.md) — never streamed as prose, where it gets lost among subagent updates; launch the subagents first so the blocking interview overlaps their runtime.
+
+**Subagent resilience** — a subagent that idles or reports "finished" without delivering findings is a failed run, not a wait-longer situation:
+
+1. Nudge once: request the report explicitly (or check whether its output landed elsewhere).
+2. If nothing arrives after one nudge, stop waiting. Either respawn once with a tighter prompt, or run that lens inline yourself at reduced breadth — whichever is cheaper for the remaining scope. Never loop on a silent agent.
+3. Disclose the degradation in the run report's disclosures: which lens ran inline or respawned, and that inline-run findings lack the independence the vet step normally provides (you cannot vet your own leads with fresh eyes — mark their Confidence one level lower).
+4. Never present a lens as covered when it contributed nothing.
 
 Vet before proceeding: subagents over-report. Re-read the strongest cited locations yourself; drop findings whose evidence doesn't hold. Subagent line numbers are leads, not facts.
 
