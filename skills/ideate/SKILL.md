@@ -40,7 +40,7 @@ Every idea must be grounded through at least one of two lenses, and the best ide
 |---|---|---|
 | Inside-out subagents | 1 (all five signals) | up to 5 (one per signal cluster) |
 | Live web/GitHub research | no | yes |
-| Session-transcript mining | if transcripts found | yes, always attempted |
+| Session-transcript mining | if transcripts found | yes — delivered, or its failure reported when it happens |
 | Maintainer interview | offered once, skippable | offered once, skippable |
 | Candidates generated | ~12 | ~20 |
 | Portfolio survivors | ~6 | ~10 |
@@ -69,12 +69,40 @@ Build the grounding-facts block that every subagent will receive. Cover:
 
 **Outside-in**: follow `references/user-evidence.md` for the three evidence sources — live research (deep mode), session-transcript mining, and the maintainer interview. Run applicable sources; record for each piece of evidence its source type (needed for Research Backing scoring later). The interview goes through the **AskUserQuestion tool** (mechanics in user-evidence.md) — never streamed as prose, where it gets lost among subagent updates; launch the subagents first so the blocking interview overlaps their runtime.
 
-**Subagent resilience** — a subagent that idles or reports "finished" without delivering findings is a failed run, not a wait-longer situation:
+**Spawn contract — get this wrong and every lens returns nothing.** The usual failure is not a lazy subagent; it is a spawn with no return channel.
 
-1. Nudge once: request the report explicitly (or check whether its output landed elsewhere).
-2. If nothing arrives after one nudge, stop waiting. Either respawn once with a tighter prompt, or run that lens inline yourself at reduced breadth — whichever is cheaper for the remaining scope. Never loop on a silent agent.
-3. Disclose the degradation in the run report's disclosures: which lens ran inline or respawned, and that inline-run findings lack the independence the vet step normally provides (you cannot vet your own leads with fresh eyes — mark their Confidence one level lower).
-4. Never present a lens as covered when it contributed nothing.
+1. **Spawn plain, unnamed background subagents.** Pin the call to exactly this shape — one call per lens, no other fields:
+
+   ```
+   Agent({ description: "Inside-out signal mining",
+           subagent_type: "Explore",            // "general-purpose" for transcript mining
+           prompt: <the full prompt assembled per the Phase 1 checklist> })
+   ```
+
+   **Never pass `name`.** A named agent is a mailbox teammate: the tool returns only `agent_id: <name>@session-<id>` with "will receive instructions via mailbox", there is no task id to poll, and its completion delivers no report into this run. An unnamed spawn instead answers "you will be notified automatically when it completes", and its findings arrive in a `<task-notification>` `<result>` block. **That notification is the delivery channel** — nothing else reliably returns a lens.
+
+   Measured side by side, same task (report one line of a file), same moment:
+
+   | | unnamed | named |
+   |---|---|---|
+   | Tool result | "you will be notified automatically" + task id | `agent_id`, "via mailbox", no task id |
+   | Outcome | `<task-notification>` with the answer, **10 seconds** | two `idle_notification`s (`idleReason: "available"`), **65 minutes apart, no answer** |
+   | Direct nudge | n/a | `{"success":true,"message":"Message sent to …'s inbox"}` → still no answer |
+
+   A named agent produced nothing for a one-line task across an hour, including after being asked point-blank. Anything it might eventually say would arrive out of band as a teammate message, not as a return value you can wait on — which a pipeline advancing to Phase 3 cannot consume anyway: findings land after the portfolio is written, or never. **Do not budget recovery effort on nudging a named agent; respawn it unnamed.**
+2. **Launch every lens in one message** so they genuinely overlap. Spawning them in separate turns serialises them — two nominally parallel lenses once launched 46 minutes apart — and the interview timing in `references/user-evidence.md` assumes both are already running.
+3. **A receipt is not a finding.** An `agent_id`, or a `SendMessage` result of `{"success": true, "message": "Message sent to …"}`, confirms only that *you sent something*. Neither is evidence that anything came back. Only a completion notification carrying findings, or a message from the agent itself, counts as delivery.
+4. **Never read a subagent's `.output` file** to check progress — it is that agent's full JSONL transcript and will bury this session's context.
+
+**Subagent resilience** — separate an agent that failed from one still working:
+
+1. **Budget real time before judging.** A lens mining tens of MB of transcripts, or covering five signal clusters, needs many minutes. Silence ten minutes in is normal, not a stall. Fill the wait with the interview or deeper recon instead of declaring the lens dead.
+2. **If there is no notification channel, the bug is yours.** Before concluding a lens is unresponsive, re-check how you spawned it against the contract above. **An `idle_notification` (`idleReason: "available"`) is the tell**: that is a named teammate going quiet, not a lens reporting — it never carries findings. Respawn it unnamed rather than nudging it. "The agent stalled" is almost always this mis-spawn wearing a disguise.
+3. **Only a delivered-but-empty report is a failed run.** Once findings arrive with nothing usable in them, nudge once for the report — an unnamed agent is still addressable, via `SendMessage` to the agent id its spawn returned, so you lose no recovery path by not naming it. If the retry is also empty, stop: respawn once with a tighter prompt, or run that lens inline at reduced breadth using the inline recipe in its reference file. Never loop on a silent agent.
+4. Disclose the degradation in the run report's disclosures: which lens ran inline or respawned, and that inline-run findings lack the independence the vet step normally provides (you cannot vet your own leads with fresh eyes — mark their Confidence one level lower).
+5. Never present a lens as covered when it contributed nothing.
+
+**Delivery gate — never enter Phase 3 with an undelivered source.** Before persona synthesis, account for every evidence source this mode planned, each marked **delivered** / **ran inline** / **failed, with reason**. Any source not delivered **must be run inline by you at reduced breadth** using the recipe in its reference file — the bounded transcript extractor in `references/user-evidence.md`, or a narrowed sweep of the highest-value signals in `references/signal-playbook.md` — before the pipeline advances. A source may reach the portfolio thin, or at lower Confidence, but never merely absent. Only if the inline attempt *itself* fails does the source become a disclosed N/A — and then say so **in the turn it fails**, not in the closing disclosures, where the user learns too late to redirect the run.
 
 Vet before proceeding: subagents over-report. Re-read the strongest cited locations yourself; drop findings whose evidence doesn't hold. Subagent line numbers are leads, not facts.
 
