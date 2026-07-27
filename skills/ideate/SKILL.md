@@ -145,7 +145,7 @@ For each selected idea, write `<output-dir>/NNN-<slug>.md` using the matching te
 
 Update `<output-dir>/README.md` (index): portfolio table with per-idea status (`SELECTED` / `DEFERRED` / `REJECTED` / `DONE`), the killed-candidates ledger, deferred ideas carried forward, and the run metadata (date, mode, SHA, evidence sources used, and the artifact URL if one was published). This index is what makes the next run a reconcile instead of a cold start.
 
-If an artifact was published at 6d, **redeploy it now** — same file path, same URL — with the deliverables section filled in (type, repo path, two-line summary, and the kickoff prompt in a copy-friendly block for each written file) and the idea states advanced to match the index. An artifact left showing "not written yet" after the write-ups exist is worse than none: it reports the run as unfinished.
+If the user opted into the artifact at 6c, **rewrite `<output-dir>/portfolio.html` now** — with the deliverables section filled in (type, repo path, two-line summary, and the kickoff prompt in a copy-friendly block for each written file) and the idea states advanced to match the index. Do this **unconditionally**, including when publishing was unavailable at 6d and the page only exists on disk; only the **redeploy** (same file path, same URL) is conditional on a successful publish. A page left showing "not written yet" after the write-ups exist is worse than none: it reports the run as unfinished, whether it is being read in a browser tab or from the local file.
 
 Every written brief and plan ends with a **Kickoff prompt** section (see `references/brief-template.md`) — a self-contained, copy-pasteable prompt for starting that work in any session or agent.
 

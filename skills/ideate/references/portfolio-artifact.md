@@ -10,7 +10,7 @@ Published artifacts are private to the user by default and can be shared later a
 |---|---|
 | Phase 6c | Ask once, after selection. Decline → skip everything below, permanently for this run. |
 | Phase 6c (accepted) | Write the HTML and publish the **initial** artifact: portfolio, states, ledgers, disclosures. Deliverables section reads "not written yet". |
-| Phase 7 | After the briefs/plans land on disk, **redeploy the same file** with the deliverables filled in and states advanced. |
+| Phase 7 | After the briefs/plans land on disk, **rewrite the file** with the deliverables filled in and states advanced — always — then redeploy it if the artifact published successfully. |
 | Phase 8 | Include the artifact URL in the handoff list. |
 | Reconcile runs | If the index records a prior artifact URL, offer to update that artifact instead of minting a new one (pass `url` to the Artifact tool). |
 
@@ -27,7 +27,7 @@ Never publish silently, and never re-ask after a decline — one offer per run.
 
 **Constraints that will otherwise break the page:** everything inline and self-contained (no CDN scripts, external fonts, or remote images — a strict CSP blocks them); style for both light and dark (`prefers-color-scheme` plus `:root[data-theme="dark"]` / `[data-theme="light"]` overrides); wide tables and kickoff-prompt blocks wrapped in their own `overflow-x: auto` container so the page body never scrolls sideways.
 
-**If the Artifact tool is unavailable** in this environment: say so plainly in the turn where it fails, keep the HTML file on disk (it opens fine in a browser), and continue the pipeline. A missing artifact never blocks Phase 7.
+**If the Artifact tool is unavailable** in this environment: say so plainly in the turn where it fails, keep the HTML file on disk (it opens fine in a browser), give the user its path, and continue the pipeline. A failed publish never blocks Phase 7 — and it does not excuse skipping the Phase 7 rewrite either. The on-disk file is then the only copy the user has, so it is the one that most needs the deliverables filled in. Treat "publish failed" as "the file is the artifact", not as "there is no artifact".
 
 ## Redaction rules
 
