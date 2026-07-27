@@ -15,7 +15,7 @@ Every idea must be grounded through at least one of two lenses, and the best ide
 
 ## Hard rules
 
-1. **Never modify source code.** The only writes allowed are to the `ideas/` directory (use `feature-ideas/` if `ideas/` already exists for another purpose) inside the target repo, plus the session scratch location for the run report (Phase 6a).
+1. **Never modify source code.** The only writes allowed are to the `ideas/` directory (use `feature-ideas/` if `ideas/` already exists for another purpose) inside the target repo, plus the session scratch location for the run report (Phase 6a). Publishing the review artifact (Phase 6c) happens only on explicit user opt-in, never by default.
 2. **Read-only analysis otherwise.** No installs, builds, formatters, commits, or pushes. Commands that inspect (`git log`, `grep`, `gh issue list`) are fine; commands that mutate the working tree are not.
 3. **Never fabricate user evidence.** Personas, pain points, and demand claims must trace to real evidence (repo content, live research, transcripts, or the maintainer's own answers). When evidence is thin, degrade with disclosure per the ladder in `references/user-evidence.md` — a disclosed inside-out-only run is valid; an invented persona is not.
 4. **Generic suggestions are noise, not findings.** An idea that could apply to any project in the category ("add dark mode", "add AI", "add a dashboard") does not belong in the portfolio unless this repo's evidence specifically demands it.
@@ -135,13 +135,17 @@ The portfolio holds **options for the maintainer to weigh, not problems ranked**
 
 **6b — Select ideas (one AskUserQuestion call, same turn as 6a).** Immediately before the call, state in plain terms: selected ideas get written up as documents in `<output-dir>/`; unselected ideas are recorded in the index as deferred and resurface on the next run — nothing is lost by not selecting. Then issue the AskUserQuestion: multiSelect, one option per idea labeled by number + short title, with verdict, score, and one-line evidence in the option description. The tool allows at most 4 options per question and 4 questions per call: batch four ideas per question ("Select from ideas 1–4", "5–8", …); beyond 16, issue a second call. Include one final question in the same call: whether to also save the full run report into `<output-dir>/` in the repo ("Save to repo (Recommended)" / "Scratch only").
 
-**6c — Choose formats (immediately after 6b returns, only if Advance ideas were selected).** Validate-verdict ideas always get a design/spike brief — the validation is the deliverable, so don't ask. For each selected **Advance** idea, ask (one question per idea, up to 4 per call) which write-up to produce, explaining the difference in the question text: **spike brief** = a one-day investigation plan that answers the open questions before committing to build; **full handoff plan** = an executor-ready, step-by-step implementation spec another agent can build from without context. Note the user can override any of this via the "Other" field. After 6c returns, proceed straight into Phase 7 — no confirmation turn in between.
+**6c — Offer a review artifact (one AskUserQuestion, immediately after 6b returns).** Read `references/portfolio-artifact.md`. Ask once whether to also publish the portfolio as a shareable web page alongside the markdown — stating plainly what it is: a private page on claude.ai holding the same portfolio, each idea's state, and (once written) the briefs and plans with their kickoff prompts, so the run can be reviewed by scrolling one page instead of opening several files. Say that the markdown in `<output-dir>/` is written either way and remains the source of truth, and that declining changes nothing else about the run. Options: **Publish a review artifact (Recommended)** / **Markdown only**. Never ask twice — a decline stands for the whole run.
+
+**6d — Publish, then choose formats (same turn, immediately after 6c returns).** If the artifact was accepted, build and publish it now per `references/portfolio-artifact.md` — portfolio, states, ledgers, disclosures, with the deliverables section marked not-yet-written — and give the user its URL. Then, still in the same turn and only if Advance ideas were selected, ask formats. Validate-verdict ideas always get a design/spike brief — the validation is the deliverable, so don't ask. For each selected **Advance** idea, ask (one question per idea, up to 4 per call) which write-up to produce, explaining the difference in the question text: **spike brief** = a one-day investigation plan that answers the open questions before committing to build; **full handoff plan** = an executor-ready, step-by-step implementation spec another agent can build from without context. Note the user can override any of this via the "Other" field. After 6d returns — or immediately, if there were no Advance ideas to ask about — proceed straight into Phase 7, no confirmation turn in between.
 
 ## Phase 7 — Write and persist
 
 For each selected idea, write `<output-dir>/NNN-<slug>.md` using the matching template in `references/brief-template.md`, stamped with the Phase 0 SHA. If the user chose to keep the run report (6b), copy it to `<output-dir>/reports/<date>-portfolio.md`.
 
-Update `<output-dir>/README.md` (index): portfolio table with per-idea status (`SELECTED` / `DEFERRED` / `REJECTED` / `DONE`), the killed-candidates ledger, deferred ideas carried forward, and the run metadata (date, mode, SHA, evidence sources used). This index is what makes the next run a reconcile instead of a cold start.
+Update `<output-dir>/README.md` (index): portfolio table with per-idea status (`SELECTED` / `DEFERRED` / `REJECTED` / `DONE`), the killed-candidates ledger, deferred ideas carried forward, and the run metadata (date, mode, SHA, evidence sources used, and the artifact URL if one was published). This index is what makes the next run a reconcile instead of a cold start.
+
+If the user opted into the artifact at 6c, **rewrite `<output-dir>/portfolio.html` now** — with the deliverables section filled in (type, repo path, two-line summary, and the kickoff prompt in a copy-friendly block for each written file) and the idea states advanced to match the index. Do this **unconditionally**, including when publishing was unavailable at 6d and the page only exists on disk; only the **redeploy** (same file path, same URL) is conditional on a successful publish. A page left showing "not written yet" after the write-ups exist is worse than none: it reports the run as unfinished, whether it is being read in a browser tab or from the local file.
 
 Every written brief and plan ends with a **Kickoff prompt** section (see `references/brief-template.md`) — a self-contained, copy-pasteable prompt for starting that work in any session or agent.
 
@@ -149,7 +153,7 @@ Every written brief and plan ends with a **Kickoff prompt** section (see `refere
 
 A run must not end open-ended. In the **same turn** as Phase 7's writes:
 
-1. List what was written — each file path with a one-line description.
+1. List what was written — each file path with a one-line description, plus the review-artifact URL if one was published (noting it now carries the plans and kickoff prompts).
 2. Recommend a starting point (typically the highest-leverage quick win) with one sentence of reasoning.
 3. End the turn with an AskUserQuestion — "What's next?" — offering:
    - **Start the recommended idea now** — begin executing its brief/plan in this session. The ideation pipeline is complete at this point; this skill's read-only rules end with it. Restate the file's scope before touching anything, and for a handoff plan, offer dispatching a subagent executor in an isolated worktree instead where the environment supports it.
@@ -160,6 +164,8 @@ A run must not end open-ended. In the **same turn** as Phase 7's writes:
 ## Reconcile runs
 
 For each prior idea: verify its evidence still exists at the cited locations (drift check against the stamped SHA), re-score against current personas/evidence, and tag `prior-keep` (unchanged), `prior-reframe` (right idea, wrong shape — explain), `prior-drop` (evidence gone or built independently — record which). Then continue the normal pipeline for new candidates.
+
+If the prior index records an artifact URL, the 6c offer becomes "update the existing review page" rather than "publish a new one" — update it in place (pass its `url`) so the maintainer's saved link keeps working, and carry `Done` states across.
 
 ## Tone
 

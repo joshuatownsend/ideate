@@ -62,11 +62,13 @@ ideas/
   001-<idea-slug>.md             design/spike brief or full handoff plan,
                                  each ending in a copy-pasteable kickoff prompt
   reports/2026-07-24-portfolio.md   the full run report, if you chose to keep it
+  portfolio.html                 the review page, if you asked for one
 ```
 
 - **Design/spike briefs** — a one-day investigation plan: evidence, trade-offs, open questions, decision criteria.
 - **Full handoff plans** — self-contained, verification-gated implementation specs a cheaper executor model can build from with zero context.
 - **The index** — persistent memory. Deferred ideas resurface; rejected ideas stay rejected; the next `/ideate` run re-scores instead of re-litigating.
+- **An optional review page** — after you pick your ideas, `ideate` offers to publish the portfolio as a private, shareable web page: every idea with its verdict, score, evidence and current state, the killed and parked ledgers, and — once the write-ups land — each brief or plan with its kickoff prompt in a copy block. Decline it and nothing changes; the markdown is always written and stays the source of truth.
 
 ## Install
 
