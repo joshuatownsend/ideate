@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ideate — social card</title>
+<style>
+  /* Source for assets/social-card.png. Render at exactly 1280x640, DPR 2.
+     See assets/README.md for the regeneration command. */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:      #0b0e13;
+    --panel:   #10141b;
+    --line:    #1e2530;
+    --text:    #e6edf3;
+    --muted:   #7d8899;
+    --dim:     #4d5768;
+    --accent:  #d97757;  /* prompt / wordmark slash */
+    --inside:  #8ab4f8;  /* inside-out lens */
+    --outside: #7ee0b8;  /* outside-in lens */
+    --kill:    #e06c75;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+  }
+
+  html, body { width: 1280px; height: 640px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-variant-ligatures: none;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Faint scan-grid + corner glow: texture without noise at thumbnail size. */
+  body::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 32px;
+    opacity: 0.35;
+  }
+  body::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(900px 420px at 88% 8%, rgba(217,119,87,0.10), transparent 65%),
+      radial-gradient(700px 400px at 4% 96%, rgba(126,224,184,0.06), transparent 60%);
+  }
+
+  .card { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; padding: 60px 72px 0; }
+
+  .prompt { font-size: 24px; letter-spacing: 0.01em; color: var(--muted); display: flex; align-items: center; gap: 12px; }
+  .prompt .sigil { color: var(--accent); }
+  .prompt .cmd   { color: var(--text); }
+  .prompt .caret { width: 12px; height: 24px; background: var(--accent); opacity: 0.85; margin-left: 2px; }
+
+  .wordmark {
+    margin-top: 28px;
+    font-size: 116px;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .tagline {
+    margin-top: 20px;
+    font-size: 36px;
+    line-height: 1.28;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    max-width: 800px;
+  }
+
+  /* ---- pipeline ---- */
+  .rule {
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .rule-label { font-size: 17px; color: var(--dim); letter-spacing: 0.02em; }
+
+  .pipeline {
+    margin-top: 16px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 19px;
+  }
+
+  /* Row height + gap here must stay in sync with the connector SVG geometry
+     below: dot centres land at y=13 and y=57 in a 70px box. */
+  .lenses { display: flex; flex-direction: column; gap: 18px; }
+  .lens { display: flex; align-items: center; gap: 10px; height: 26px; white-space: nowrap; }
+  .lens .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .lens.in  .dot { background: var(--inside); box-shadow: 0 0 14px rgba(138,180,248,0.55); }
+  .lens.out .dot { background: var(--outside); box-shadow: 0 0 14px rgba(126,224,184,0.55); }
+  .lens .label { color: var(--text); }
+  .lens .note { color: var(--dim); }
+
+  .join { flex: none; }
+
+  .cut {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 12px 18px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .cut b { color: var(--text); font-weight: 600; }
+
+  .verdicts { display: flex; align-items: center; gap: 8px; }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 14px;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+  .chip.advance { color: var(--outside); border-color: rgba(126,224,184,0.38); background: rgba(126,224,184,0.07); }
+  .chip.kill    { color: var(--kill);    border-color: rgba(224,108,117,0.34); }
+
+  /* ---- footer ---- */
+  .footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--line);
+    padding: 22px 72px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    color: var(--muted);
+    background: rgba(11,14,19,0.6);
+  }
+  .footer .sep { color: var(--dim); margin: 0 12px; }
+  .footer .repo { color: var(--text); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="prompt">
+      <span class="sigil">$</span><span class="cmd">/ideate deep</span><span class="caret"></span>
+    </div>
+
+    <div class="wordmark">ideate</div>
+
+    <div class="tagline">
+      Find out what your project<br>wants to become.
+    </div>
+
+    <div class="rule">
+      <div class="rule-label">// two lenses, one adversarial cut</div>
+    </div>
+
+    <div class="pipeline">
+      <div class="lenses">
+        <div class="lens in">
+          <span class="dot"></span><span class="label">inside-out</span><span class="note">repo</span>
+        </div>
+        <div class="lens out">
+          <span class="dot"></span><span class="label">outside-in</span><span class="note">users</span>
+        </div>
+      </div>
+
+      <svg class="join" width="56" height="70" viewBox="0 0 56 70" fill="none" aria-hidden="true">
+        <path d="M0 13 H16 Q26 13 26 23 V35" stroke="#8ab4f8" stroke-width="1.5" opacity="0.75"/>
+        <path d="M0 57 H16 Q26 57 26 47 V35" stroke="#7ee0b8" stroke-width="1.5" opacity="0.75"/>
+        <path d="M26 35 H48" stroke="#4d5768" stroke-width="1.5"/>
+        <path d="M48 30 L56 35 L48 40 Z" fill="#4d5768"/>
+      </svg>
+
+      <div class="cut"><b>8 kill questions</b> &nbsp;→&nbsp; a scored portfolio</div>
+
+      <div class="verdicts">
+        <span class="chip advance">Advance</span>
+        <span class="chip">Validate</span>
+        <span class="chip">Park</span>
+        <span class="chip kill">Kill</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>A Claude Code skill<span class="sep">·</span>MIT</div>
+    <div class="repo">github.com/joshuatownsend/ideate</div>
+  </div>
+</body>
+</html>

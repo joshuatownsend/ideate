@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/social-card.png" alt="ideate — find out what your project wants to become. Two lenses (inside-out from the repo, outside-in from real users) feed 8 kill questions, producing a scored portfolio with Advance / Validate / Park / Kill verdicts." width="100%">
+</p>
+
 # ideate
 
 **Find out what your project wants to become.**
