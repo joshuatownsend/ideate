@@ -106,7 +106,7 @@ Inspired by the `next` command in [shadcn/improve](https://github.com/shadcn/imp
 
 ## Contributing
 
-Issues and PRs welcome — especially dogfood findings from real runs. If the skill produced a flabby portfolio, a confusing interaction, or a kill verdict you disagreed with, that's exactly the feedback that improves it.
+Issues and PRs welcome — especially anything you hit using this on your own project. If the skill produced a flabby portfolio, a confusing interaction, or a kill verdict you disagreed with, that's exactly the feedback that improves it.
 
 ## License
 
