@@ -102,7 +102,7 @@ Requires Claude Code. Deep mode benefits from `gh` (issue mining) and web access
 
 ## Provenance
 
-Inspired by the `next` command in [shadcn/improve](https://github.com/shadcn/improve) (inside-out signal mining, the read-only advisor pattern, executor-ready plans) and the Novel Features + user research capabilities in [mvanhorn/cli-printing-press](https://github.com/mvanhorn/cli-printing-press) (evidence-grounded personas, the adversarial cut, no-fabrication halts). Built with Claude Code, and amended seven times in its first three days from live dogfood findings — the commit log is the changelog of the skill practicing what it preaches.
+Inspired by the `next` command in [shadcn/improve](https://github.com/shadcn/improve) (inside-out signal mining, the read-only advisor pattern, executor-ready plans) and the Novel Features + user research capabilities in [mvanhorn/cli-printing-press](https://github.com/mvanhorn/cli-printing-press) (evidence-grounded personas, the adversarial cut, no-fabrication halts). Built with Claude Code, and refined by running it against its own repo — dogfood findings from real runs are what shape it.
 
 ## Contributing
 
